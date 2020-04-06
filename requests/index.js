@@ -2,15 +2,25 @@
 
 const http = require('http');
 const server = require('./server');
+const mongoose = require('mongoose');
 
 const { port } = require('./config').server;
 
 async function bootstrap() {
-  /**
-   * Add external services init as async operations (db, redis, etc...)
-   * e.g.
-   * await sequelize.authenticate()
-   */
+  const databaseConfig = require('./config').databaseConfig;
+  // eslint-disable-next-line prettier/prettier
+  const mongoURI = `${databaseConfig.host}:${databaseConfig.port}/${databaseConfig.database}`;
+  // Connection with the MongoDB
+  mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  });
+  mongoose.connection.on('error', err => {
+    throw new Error(err);
+  });
+
+  // Create the server
   return http.createServer(server.callback()).listen(port);
 }
 
