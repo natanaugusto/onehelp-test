@@ -17,7 +17,10 @@ const envSchema = joi
 /**
  * Validate the env variables using joi.validate()
  */
-const { error, value: envVars } = joi.validate(process.env, envSchema);
+const envValues = process.env;
+envValues.API_VERSION = require('../../package.json').version;
+
+const { error, value: envVars } = joi.validate(envValues, envSchema);
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }

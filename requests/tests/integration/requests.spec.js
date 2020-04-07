@@ -28,7 +28,7 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(
-        200,
+        201,
         Object.assign(cleaningRequest, {
           price: cleaningRequest.duration * pricePerHour,
         }),
@@ -36,7 +36,7 @@ describe('POST /requests endpoint', () => {
       );
   });
 
-  it('Create a new cleaning request consuming a discount type percent', async done => {
+  it('Create a new cleaning request consuming a percentage discount', async done => {
     const cleaningRequest = {
       date: moment().format('YYYY-MM-DD'),
       duration: 5,
@@ -60,11 +60,89 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(
-        200,
+        201,
         Object.assign(cleaningRequest, {
           price: price,
         }),
         done,
       );
+  });
+
+  it('Create a new cleaning request consuming a absolute discount', async done => {
+    const cleaningRequest = {
+      date: moment().format('YYYY-MM-DD'),
+      duration: 5,
+      user: {
+        name: faker.name.findName(),
+        email: faker.internet.email().toLowerCase(),
+      },
+    };
+    let discount = {
+      type: 'absolute',
+      value: 15,
+      userEmail: cleaningRequest.user.email,
+    };
+    await Discount.create(discount);
+    // Duration * PricePerHour - Discount value
+    const price = cleaningRequest.duration * pricePerHour - discount.value;
+    tester
+      .post(urlPrefix)
+      .send(cleaningRequest)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(
+        201,
+        Object.assign(cleaningRequest, {
+          price: price,
+        }),
+        done,
+      );
+    // discount = await Discount.find(discount);
+    // expect(discount.length).toEqual(0);
+  });
+
+  it('Create a new cleaning request consuming the bigger discount', async done => {
+    const cleaningRequest = {
+      date: moment().format('YYYY-MM-DD'),
+      duration: 5,
+      user: {
+        name: faker.name.findName(),
+        email: faker.internet.email().toLowerCase(),
+      },
+    };
+    let discounts = [
+      {
+        type: 'absolute',
+        value: 15,
+        userEmail: cleaningRequest.user.email,
+      },
+      {
+        type: 'percent',
+        value: 0.15,
+        userEmail: cleaningRequest.user.email,
+      },
+    ];
+    discounts.forEach(async discount => {
+      await Discount.create(discount);
+    });
+    // Duration * PricePerHour - Price * Discount Percent
+    const price =
+      cleaningRequest.duration * pricePerHour -
+      cleaningRequest.duration * pricePerHour * discounts[1].value;
+    tester
+      .post(urlPrefix)
+      .send(cleaningRequest)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(
+        201,
+        Object.assign(cleaningRequest, {
+          price: price,
+        }),
+        done,
+      );
+    discounts.forEach(async discount => {
+      await Discount.deleteOne(discount);
+    });
   });
 });

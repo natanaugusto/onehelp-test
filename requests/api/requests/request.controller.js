@@ -1,7 +1,7 @@
 'use strict';
 
 const Request = require('./request.model');
-const RequestService = require('./request.service');
+const RequestService = require('./discount.service');
 
 class RequestController {
   /**
@@ -11,12 +11,13 @@ class RequestController {
   async create(ctx) {
     const request = ctx.request.body;
     request.duration = Math.ceil(request.duration);
-    const { price, discounts } = await RequestService.getPrice(request);
+    const { price, discountUsed } = await RequestService.getPrice(request);
     request.price = price;
     try {
       await Request.create(request);
-      RequestService.consumeDiscounts(discounts);
+      await RequestService.consumeDiscounts(discountUsed);
       ctx.body = request;
+      ctx.status = 201;
     } catch (err) {
       throw err;
     }
