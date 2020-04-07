@@ -1,27 +1,15 @@
 'use strict';
-const MockModel = require('jest-mongoose-mock');
-const moment = require('moment');
-const faker = require('faker/locale/pt_BR');
+
 const tester = require('../tester');
 const { pricePerHour } = require('../../config').requests;
 const { apiVersion } = require('../../config').server;
 const urlPrefix = `/api/${apiVersion}/requests`;
-
-jest.mock('../../api/requests/request.model', () => new MockModel());
-// jest.mock('../../api/requests/discount.model', () => new MockModel());
-
-const Discount = require('../../api/requests/discount.model');
+const RequestFactory = require('../../factories/request.factory');
+const DiscountFactory = require('../../factories/discount.factory');
 
 describe('POST /requests endpoint', () => {
   it('Creating a new cleaning request', async done => {
-    const cleaningRequest = {
-      date: moment().format('YYYY-MM-DD'),
-      duration: Math.floor(Math.random() * 8),
-      user: {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-      },
-    };
+    const cleaningRequest = await new RequestFactory().make();
     tester
       .post(urlPrefix)
       .send(cleaningRequest)
@@ -37,23 +25,16 @@ describe('POST /requests endpoint', () => {
   });
 
   it('Create a new cleaning request consuming a percentage discount', async done => {
-    const cleaningRequest = {
-      date: moment().format('YYYY-MM-DD'),
-      duration: 5,
-      user: {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-      },
-    };
-    await Discount.create({
+    const cleaningRequest = await new RequestFactory().make();
+    const discount = await new DiscountFactory({
       type: 'percent',
       value: 0.2,
       userEmail: cleaningRequest.user.email,
-    });
+    }).create();
     // Duration * PricePerHour - Price * Discount Percent
     const price =
       cleaningRequest.duration * pricePerHour -
-      cleaningRequest.duration * pricePerHour * 0.2;
+      cleaningRequest.duration * pricePerHour * discount.value;
     tester
       .post(urlPrefix)
       .send(cleaningRequest)
@@ -69,20 +50,12 @@ describe('POST /requests endpoint', () => {
   });
 
   it('Create a new cleaning request consuming a absolute discount', async done => {
-    const cleaningRequest = {
-      date: moment().format('YYYY-MM-DD'),
-      duration: 5,
-      user: {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-      },
-    };
-    let discount = {
+    const cleaningRequest = await new RequestFactory().make();
+    const discount = await new DiscountFactory({
       type: 'absolute',
       value: 15,
       userEmail: cleaningRequest.user.email,
-    };
-    await Discount.create(discount);
+    }).create();
     // Duration * PricePerHour - Discount value
     const price = cleaningRequest.duration * pricePerHour - discount.value;
     tester
@@ -102,14 +75,7 @@ describe('POST /requests endpoint', () => {
   });
 
   it('Create a new cleaning request consuming the bigger discount', async done => {
-    const cleaningRequest = {
-      date: moment().format('YYYY-MM-DD'),
-      duration: 5,
-      user: {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-      },
-    };
+    const cleaningRequest = await new RequestFactory().make();
     let discounts = [
       {
         type: 'absolute',
@@ -123,7 +89,7 @@ describe('POST /requests endpoint', () => {
       },
     ];
     discounts.forEach(async discount => {
-      await Discount.create(discount);
+      await await new DiscountFactory(discount).create();
     });
     // Duration * PricePerHour - Price * Discount Percent
     const price =
@@ -141,8 +107,5 @@ describe('POST /requests endpoint', () => {
         }),
         done,
       );
-    discounts.forEach(async discount => {
-      await Discount.deleteOne(discount);
-    });
   });
 });
