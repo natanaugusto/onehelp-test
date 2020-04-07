@@ -24,6 +24,7 @@
     "faker": "^4.1.0",
     "husky": "2.3.0",
     "jest-mongoose-mock": "^1.2.0",
+    "mongodb-memory-server": "^6.5.2",
     "nodemon": "1.19.0",
     "prettier": "1.17.1",
     "supertest": "^4.0.2"
