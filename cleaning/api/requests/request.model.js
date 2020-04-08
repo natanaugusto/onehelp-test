@@ -16,8 +16,8 @@ const schema = mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
-    default: 50.0,
+    required: false,
+    default: null,
   },
   user: {
     name: {

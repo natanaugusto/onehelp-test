@@ -4,6 +4,10 @@
  */
 class Factory {
   /**
+   * Return the model
+   */
+  model() {}
+  /**
    * Construct the class
    * @param {object} defaultValues Object like the schema for pass the default values to be used on generate
    * @param {integer} count Quantity of elements to be created
@@ -74,6 +78,20 @@ class Factory {
    * (This method must be implemented on the child class)
    * @param {*} values
    */
-  modelCreate(values) {}
+  async modelCreate(values) {
+    const created = await this.model().create(values);
+    return created;
+  }
+
+  /**
+   * Drop all database
+   * !!!! CAUTION !!!!
+   * This method will drop all the data
+   * Just use on test mode
+   * !!!! CAUTION !!!!
+   */
+  async resetData() {
+    await this.model().deleteMany();
+  }
 }
 module.exports = Factory;

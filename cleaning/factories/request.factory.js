@@ -5,6 +5,9 @@ const Factory = require('../utils/factory');
 const Request = require('../api/requests/request.model');
 
 class RequestFactory extends Factory {
+  model() {
+    return Request;
+  }
   schema() {
     return {
       date: moment().format('YYYY-MM-DD'),
@@ -14,11 +17,6 @@ class RequestFactory extends Factory {
         email: faker.internet.email().toLowerCase(),
       },
     };
-  }
-
-  async modelCreate(values) {
-    const created = await Request.create(values);
-    return created;
   }
 }
 

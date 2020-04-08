@@ -1,13 +1,25 @@
 'use strict';
 
-// const MockModel = require('jest-mongoose-mock');
 require('../tester');
-// jest.mock('../../api/requests/discount.model', () => new MockModel());
 
+const Discount = require('../../api/requests/discount.model');
 const DiscountFactory = require('../../factories/discount.factory');
 
 describe('Test the DiscountFactory', () => {
   const userEmail = 'natan@mail.com';
+
+  it('Testing the reset data for Discounts', async done => {
+    const count = 10;
+    await new DiscountFactory(null, count).create();
+    let discounts = await Discount.find();
+    expect(discounts.length).toBe(count);
+
+    await new DiscountFactory(null, count).resetData();
+    discounts = await Discount.find();
+    expect(discounts.length).toBe(0);
+    done();
+  });
+
   it('Testing create Discounts', async done => {
     let discount = await new DiscountFactory().create();
     expect(typeof discount).toBe('object');

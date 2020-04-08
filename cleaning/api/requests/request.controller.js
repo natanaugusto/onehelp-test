@@ -2,6 +2,7 @@
 
 const Request = require('./request.model');
 const RequestService = require('./discount.service');
+const jsonp = require('../../utils/jsonp');
 
 class RequestController {
   /**
@@ -18,6 +19,15 @@ class RequestController {
       await RequestService.consumeDiscounts(discountUsed);
       ctx.body = request;
       ctx.status = 201;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async list(ctx) {
+    try {
+      const requests = await Request.find();
+      ctx.body = jsonp(requests);
     } catch (err) {
       throw err;
     }

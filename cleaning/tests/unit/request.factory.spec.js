@@ -1,16 +1,28 @@
 'use strict';
 
-// const MockModel = require('jest-mongoose-mock');
 require('../tester');
-// jest.mock('../../api/requests/request.model', () => new MockModel());
 
 const RequestFactory = require('../../factories/request.factory');
+const Request = require('../../api/requests/request.model');
 
 describe('Test the RequestFactory', () => {
   const user = {
     name: 'Natan',
     email: 'natan@email.com',
   };
+
+  it('Testing the reset data for Requests', async done => {
+    const count = 10;
+    await new RequestFactory(null, count).create();
+    let requests = await Request.find();
+    expect(requests.length).toBe(count);
+
+    await new RequestFactory(null, count).resetData();
+    requests = await Request.find();
+    expect(requests.length).toBe(0);
+    done();
+  });
+
   it('Testing create Requests', async done => {
     let request = await new RequestFactory().create();
     expect(typeof request).toBe('object');
