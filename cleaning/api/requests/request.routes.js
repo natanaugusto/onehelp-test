@@ -14,7 +14,6 @@ module.exports = Router => {
    * @apiGroup Requests
    * @apiVersion  0.1.0
    *
-   *
    * @apiParam  {Data} date Date when the cleaning request should be executed
    * @apiParam  {Number} duration Duration of the cleaning request
    * @apiParam  {String} user.name User name
@@ -52,9 +51,9 @@ module.exports = Router => {
    * @apiGroup Requests
    * @apiVersion  0.1.0
    *
-   * @apiSuccess (200) {type} name description
+   * @apiSuccess (200) {json} List of all requests
    *
-   * @apiSuccessExample {type} Success-Response:
+   * @apiSuccessExample {json} Success-Response:
    * [
    *   {
    *     duration: 3,
@@ -74,12 +73,63 @@ module.exports = Router => {
    *   }
    * ]
    */
-  router.get('/', RequestController.list);
-  // .get('/:id', RequestController.get)
-  // .post('/', RequestController.create)
-  // .put('/:id', RequestController.update)
-  // .all('/', RequestController.patch)
-  // .del('/:id', RequestController.delete);
+  router.get('/', RequestController.get);
+
+  /**
+   * @api {put} /api/v1/requests/:id Update Request
+   * @apiName UpdateRequest
+   * @apiGroup Requests
+   * @apiVersion  0.1.0
+   *
+   * @apiParam  {Data} date Date when the cleaning request should be executed
+   * @apiParam  {Number} duration Duration of the cleaning request
+   * @apiParam  {String} user.name User name
+   * @apiParam  {String} user.email User email
+   *
+   * @apiSuccess (204) {empty} No content
+   *
+   * @apiParamExample  {json} Request-Example:
+   * {
+   *   date: '2020-10-26',
+   *   duration: 5,
+   *   user: {
+   *     name: 'Natan Augusto',
+   *     email: 'natanaugusto@gmail.com'
+   *   }
+   * }
+   *
+   * @apiSuccessExample {empty} Success-Response:
+   * No Content
+   */
+  router.put('/:id', RequestController.update);
+
+  /**
+   * @api {delete} /api/v1/requests/:id Delete Request
+   * @apiName DeleteRequest
+   * @apiGroup Requests
+   * @apiVersion  0.1.0
+   *
+   * @apiSuccess (204) {empty} No Content
+   *
+   * @apiSuccessExample {empty} Success-Response:
+   * No Content
+   */
+  router.del('/:id', RequestController.delete);
+
+  /**
+   * @api {patch} /api/v1/requests Patch Requests
+   * @apiName PatchRequests
+   * @apiGroup Requests
+   * @apiVersion  0.1.0
+   *
+   * @apiParam  {Array} none Multiple requests
+   *
+   * @apiSuccess (204) {empty} No Content
+   *
+   * @apiSuccessExample {empty} Success-Response:
+   * No Content
+   */
+  router.all('/', RequestController.patch);
 
   return router;
 };
