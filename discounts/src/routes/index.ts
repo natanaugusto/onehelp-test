@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import UserRouter from './Users';
+import { Router } from 'express'
+import DiscountRouter from './Discounts'
 
 // Init router and path
-const router = Router();
+const router = Router()
 
 // Add sub-routes
-router.use('/users', UserRouter);
+router.use('/discounts', DiscountRouter)
 
 // Export the base-router
-export default router;
+export default router
