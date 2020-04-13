@@ -6,22 +6,25 @@ export interface IDiscount extends Document {
   userEmail: string
 }
 
-export const DiscountSchema: Schema = new Schema({
-  type: {
-    type: String,
-    enum: ['percent', 'absolute'],
-    require: true,
+export const DiscountSchema: Schema = new Schema(
+  {
+    type: {
+      type: String,
+      enum: ['percent', 'absolute'],
+      require: true,
+    },
+    value: {
+      type: Number,
+      require: true,
+    },
+    userEmail: {
+      type: String,
+      required: true,
+      lowercase: true,
+    }
   },
-  value: {
-    type: Number,
-    require: true,
-  },
-  userEmail: {
-    type: String,
-    required: true,
-    lowercase: true,
-  }
-})
+  { timestamps: true }
+)
 
 const DiscountDao: Model<IDiscount> = model<IDiscount>('discounts', DiscountSchema)
 
