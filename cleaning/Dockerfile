@@ -13,12 +13,13 @@ ENV YARN=$YARN
 ENV PROJECT_PATH=$PROJECT_PATH
 ENV NODE_ENV=$NODE_ENV
 
-# Add
-RUN groupadd -r www-data &&\
-    useradd -r -g www-data www-data
+RUN if [ ! $(getent group onehelp) ]; then \
+    groupadd -r onehelp &&\
+    useradd -r -g onehelp onehelp \
+;fi
 
-RUN mkdir -p /home/www-data &&\
-    chmod 777 /home/www-data -R
+RUN mkdir -p /home/onehelp &&\
+    chmod 777 /home/onehelp -R
 
 # Install the specified NODE_VERSION or grab latest
 RUN n "$NODE_VERSION"
