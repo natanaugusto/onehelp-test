@@ -8,7 +8,7 @@ import 'express-async-errors'
 
 import BaseRouter from './routes'
 import logger from '@shared/Logger'
-import MongoProvider from '../src/shared/MongoProvider'
+import MongoProvider from '@shared/MongoProvider'
 
 
 // Init express
