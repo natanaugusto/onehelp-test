@@ -12,7 +12,7 @@ module.exports = Router => {
    * @api {post} /api/v1/requests Create Request
    * @apiName CreateRquests
    * @apiGroup Requests
-   * @apiVersion  0.1.0
+   * @apiVersion  v1
    *
    * @apiParam  {Data} date Date when the cleaning request should be executed
    * @apiParam  {Number} duration Duration of the cleaning request
@@ -49,7 +49,7 @@ module.exports = Router => {
    * @api {get} /api/v1/requests List Requests
    * @apiName ListRquests
    * @apiGroup Requests
-   * @apiVersion  0.1.0
+   * @apiVersion  v1
    *
    * @apiSuccess (200) {json} List of all requests
    *
@@ -79,7 +79,7 @@ module.exports = Router => {
    * @api {put} /api/v1/requests/:id Update Request
    * @apiName UpdateRequest
    * @apiGroup Requests
-   * @apiVersion  0.1.0
+   * @apiVersion  v1
    *
    * @apiParam  {Data} date Date when the cleaning request should be executed
    * @apiParam  {Number} duration Duration of the cleaning request
@@ -107,7 +107,7 @@ module.exports = Router => {
    * @api {delete} /api/v1/requests/:id Delete Request
    * @apiName DeleteRequest
    * @apiGroup Requests
-   * @apiVersion  0.1.0
+   * @apiVersion  v1
    *
    * @apiSuccess (204) {empty} No Content
    *
@@ -120,7 +120,7 @@ module.exports = Router => {
    * @api {patch} /api/v1/requests Patch Requests
    * @apiName PatchRequests
    * @apiGroup Requests
-   * @apiVersion  0.1.0
+   * @apiVersion  v1
    *
    * @apiParam  {Array} none Multiple requests
    *

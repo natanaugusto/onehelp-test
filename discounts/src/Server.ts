@@ -35,7 +35,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Add APIs
-app.use('/api', BaseRouter)
+const {API_VERSION} = process.env 
+app.use(`/${API_VERSION}`, BaseRouter)
 
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

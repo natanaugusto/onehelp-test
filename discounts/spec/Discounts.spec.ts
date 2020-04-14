@@ -8,7 +8,7 @@ import DiscountFactory from '@daos/Discount/DiscountFactory'
 import { pErr } from '@shared/functions'
 
 describe('Discounts Routes', () => {
-    const discountsPath = '/api/discounts'
+    const discountsPath = '/v1/discounts'
 
     let agent: SuperTest<Test>
     beforeAll((done) => {
@@ -23,7 +23,6 @@ describe('Discounts Routes', () => {
                 .end((err: Error, res: Response) => {
                     pErr(err)
                     expect(res.status).toBe(OK)
-    
                     expect(res.body).toEqual(discounts)
                     expect(res.body.error).toBeUndefined()
                     done()

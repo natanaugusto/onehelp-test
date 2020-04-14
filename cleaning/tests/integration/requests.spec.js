@@ -2,8 +2,7 @@
 
 const tester = require('../tester');
 const { pricePerHour } = require('../../config').requests;
-const { apiVersion } = require('../../config').server;
-const urlPrefix = `/api/${apiVersion}/requests`;
+const urlPrefix = '/v1/requests';
 const jsonp = require('../../utils/jsonp');
 const RequestFactory = require('../../factories/request.factory');
 const DiscountFactory = require('../../factories/discount.factory');
