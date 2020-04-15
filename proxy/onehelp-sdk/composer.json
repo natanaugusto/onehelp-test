@@ -1,0 +1,40 @@
+{
+    "name": "onehelp/sdk",
+    "description": "OneHelp SDK",
+    "keywords": [
+        "lumen",
+        "onehelp",
+        "sdk"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.2",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "facade/ignition": "^1.4",
+        "fzaninotto/faker": "^1.4",
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "OneHelpSDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OneHelpSDK\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit"
+    }
+}

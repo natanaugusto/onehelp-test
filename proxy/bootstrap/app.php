@@ -79,6 +79,8 @@ $app->singleton(
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(\OneHelpSDK\Providers\DiscountsServiceProvider::class);
+$app->register(\OneHelpSDK\Providers\CleaningServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
 /*
