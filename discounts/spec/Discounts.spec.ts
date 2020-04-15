@@ -5,6 +5,7 @@ import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from 'http-status-codes'
 import app from '@server'
 import jsonp from '@shared/jsonp'
 import DiscountFactory from '@daos/Discount/DiscountFactory'
+import DiscountDao from '@daos/Discount/DiscountDao'
 import { pErr } from '@shared/functions'
 
 describe('Discounts Routes', () => {
@@ -18,7 +19,8 @@ describe('Discounts Routes', () => {
 
     describe(`GET:${discountsPath}`, () => {
         it('should list all discounts', async (done) => {
-            const discounts = jsonp(await new DiscountFactory(10).create())
+            await new DiscountFactory(10).create()
+            const discounts = jsonp(await DiscountDao.find())
             agent.get(discountsPath)
                 .end((err: Error, res: Response) => {
                     pErr(err)
@@ -84,6 +86,20 @@ describe('Discounts Routes', () => {
                 .end((err: Error, res: Response) => {
                     pErr(err)
                     expect(res.status).toEqual(NO_CONTENT)
+                    done()
+                })
+        })
+    })
+
+    describe(`GET ${discountsPath}/last-update`, () => {
+        it ('should show the last time a discount was created or updated', async (done) => {
+            const lastUpdate = jsonp(await new DiscountFactory().create()).updatedAt.toISOString()
+
+            agent.get(`${discountsPath}/last-update`)
+                .end((err: Error, res: Response) => {
+                    pErr(err)
+                    expect(res.status).toEqual(OK)
+                    expect(res.body).toEqual({lastUpdate})
                     done()
                 })
         })

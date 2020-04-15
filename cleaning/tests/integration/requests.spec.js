@@ -213,4 +213,17 @@ describe('PATCH /requests', () => {
       .expect(403);
     done();
   });
+
+  describe('GET /requests/last-update', () => {
+    it('should show the last time a discount was created or updated', async done => {
+      const lastUpdate = jsonp(
+        await new RequestFactory().create(),
+      ).updatedAt.toISOString();
+      tester
+        .get(`${urlPrefix}/last-update`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200, { lastUpdate }, done);
+    });
+  });
 });

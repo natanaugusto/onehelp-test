@@ -9,7 +9,7 @@ module.exports = Router => {
   });
 
   /**
-   * @api {post} /api/v1/requests Create Request
+   * @api {post} /requests Create Request
    * @apiName CreateRquests
    * @apiGroup Requests
    * @apiVersion  v1
@@ -46,7 +46,7 @@ module.exports = Router => {
   router.post('/', RequestController.create);
 
   /**
-   * @api {get} /api/v1/requests List Requests
+   * @api {get} /requests List Requests
    * @apiName ListRquests
    * @apiGroup Requests
    * @apiVersion  v1
@@ -76,7 +76,7 @@ module.exports = Router => {
   router.get('/', RequestController.get);
 
   /**
-   * @api {put} /api/v1/requests/:id Update Request
+   * @api {put} /requests/:id Update Request
    * @apiName UpdateRequest
    * @apiGroup Requests
    * @apiVersion  v1
@@ -104,7 +104,7 @@ module.exports = Router => {
   router.put('/:id', RequestController.update);
 
   /**
-   * @api {delete} /api/v1/requests/:id Delete Request
+   * @api {delete} /requests/:id Delete Request
    * @apiName DeleteRequest
    * @apiGroup Requests
    * @apiVersion  v1
@@ -117,7 +117,7 @@ module.exports = Router => {
   router.del('/:id', RequestController.delete);
 
   /**
-   * @api {patch} /api/v1/requests Patch Requests
+   * @api {patch} /requests Patch Requests
    * @apiName PatchRequests
    * @apiGroup Requests
    * @apiVersion  v1
@@ -130,6 +130,21 @@ module.exports = Router => {
    * No Content
    */
   router.all('/', RequestController.patch);
+
+  /**
+   * @api {get} /requests/last-update Last Update Request Date
+   * @apiName LastUpdateRequest
+   * @apiGroup Requests
+   * @apiVersion v1
+   *
+   * @apiSuccess (200) {json} The last updated data
+   *
+   * @apiSuccessExample {json} Success-Response:
+   * {
+   *     lastUpdate: '2020-04-15T00:52:27.947Z'
+   * }
+   */
+  router.get('/last-update', RequestController.lastUpdate);
 
   return router;
 };

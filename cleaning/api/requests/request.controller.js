@@ -84,6 +84,17 @@ class RequestController {
       throw err;
     }
   }
+
+  async lastUpdate(ctx) {
+    try {
+      const lastUpdate = jsonp(
+        await Request.findOne().sort([['updatedAt', -1]]),
+      ).updatedAt;
+      ctx.body = { lastUpdate };
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = RequestController;

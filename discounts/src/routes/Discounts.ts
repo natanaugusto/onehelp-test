@@ -123,4 +123,22 @@ router.put('/:id', controller.update)
  */
 router.delete('/:id', controller.delete)
 
+/**
+ * 
+ * @api {get} /discounts/last-update Last Update Discount Date
+ * @apiName LastUpdateDiscount
+ * @apiGroup Discount
+ * @apiVersion v1
+ * 
+ * @apiSuccess (200) {json} The last updated data
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *     lastUpdate: '2020-04-15T00:52:27.947Z'
+ * }
+ * 
+ * 
+ */
+router.get('/last-update', controller.lastUpdate)
+
 export default router

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from 'http-status-codes'
+import jsonp from '@shared/jsonp'
 import DiscountDao from '@daos/Discount/DiscountDao'
 
 const ObjectId = mongoose.Types.ObjectId
@@ -40,6 +41,11 @@ class DiscountController {
             )
         })
         return res.status(NO_CONTENT).end()
+    }
+
+    async lastUpdate(req: Request, res: Response) {
+        const lastUpdate = jsonp(await DiscountDao.findOne().sort([['updatedAt', -1]])).updatedAt
+        res.status(OK).json({lastUpdate})
     }
 }
 
