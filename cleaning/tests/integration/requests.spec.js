@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('moment');
 const tester = require('../tester');
 const { pricePerHour } = require('../../config').requests;
 const urlPrefix = '/v1/requests';
@@ -7,11 +8,16 @@ const jsonp = require('../../utils/jsonp');
 const RequestFactory = require('../../factories/request.factory');
 const DiscountFactory = require('../../factories/discount.factory');
 
+const handleErr = err => {
+  if (err) {
+    console.log(err);
+  }
+};
+
 const beforeRun = async () => {
   await new RequestFactory().resetData();
   await new DiscountFactory().resetData();
 };
-
 describe('POST /requests endpoint', () => {
   it('Creating a new cleaning request', async done => {
     await beforeRun();
@@ -20,14 +26,17 @@ describe('POST /requests endpoint', () => {
       .post(urlPrefix)
       .send(cleaningRequest)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(
-        201,
-        Object.assign(cleaningRequest, {
-          price: cleaningRequest.duration * pricePerHour,
-        }),
-        done,
-      );
+      .end((err, res) => {
+        handleErr(err);
+        expect(201).toEqual(res.status);
+        expect(cleaningRequest.user).toEqual(res.body.user);
+        expect(cleaningRequest.date).toEqual(
+          moment(res.body.data).format('YYYY-MM-DD'),
+        );
+        expect(cleaningRequest.duration).toEqual(res.body.duration);
+        expect(cleaningRequest.duration * pricePerHour).toEqual(res.body.price);
+        done();
+      });
   });
 
   it('Create a new cleaning request consuming a percentage discount', async done => {
@@ -46,14 +55,17 @@ describe('POST /requests endpoint', () => {
       .post(urlPrefix)
       .send(cleaningRequest)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(
-        201,
-        Object.assign(cleaningRequest, {
-          price: price,
-        }),
-        done,
-      );
+      .end((err, res) => {
+        handleErr(err);
+        expect(201).toEqual(res.status);
+        expect(cleaningRequest.user).toEqual(res.body.user);
+        expect(cleaningRequest.date).toEqual(
+          moment(res.body.data).format('YYYY-MM-DD'),
+        );
+        expect(cleaningRequest.duration).toEqual(res.body.duration);
+        expect(price).toEqual(res.body.price);
+        done();
+      });
   });
 
   it('Create a new cleaning request consuming a absolute discount', async done => {
@@ -70,16 +82,17 @@ describe('POST /requests endpoint', () => {
       .post(urlPrefix)
       .send(cleaningRequest)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(
-        201,
-        Object.assign(cleaningRequest, {
-          price: price,
-        }),
-        done,
-      );
-    // discount = await Discount.find(discount);
-    // expect(discount.length).toEqual(0);
+      .end((err, res) => {
+        handleErr(err);
+        expect(201).toEqual(res.status);
+        expect(cleaningRequest.user).toEqual(res.body.user);
+        expect(cleaningRequest.date).toEqual(
+          moment(res.body.data).format('YYYY-MM-DD'),
+        );
+        expect(cleaningRequest.duration).toEqual(res.body.duration);
+        expect(price).toEqual(res.body.price);
+        done();
+      });
   });
 
   it('Create a new cleaning request consuming the bigger discount', async done => {
@@ -108,14 +121,17 @@ describe('POST /requests endpoint', () => {
       .post(urlPrefix)
       .send(cleaningRequest)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(
-        201,
-        Object.assign(cleaningRequest, {
-          price: price,
-        }),
-        done,
-      );
+      .end((err, res) => {
+        handleErr(err);
+        expect(201).toEqual(res.status);
+        expect(cleaningRequest.user).toEqual(res.body.user);
+        expect(cleaningRequest.date).toEqual(
+          moment(res.body.data).format('YYYY-MM-DD'),
+        );
+        expect(cleaningRequest.duration).toEqual(res.body.duration);
+        expect(price).toEqual(res.body.price);
+        done();
+      });
   });
 });
 
@@ -127,60 +143,67 @@ describe('GET /requests endpoint', () => {
     tester
       .get(urlPrefix)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
       .expect(200, requests, done);
   });
 });
 
 describe('PUT /requests/{id}', () => {
+  beforeRun();
   it('Update a cleaning request', async done => {
-    await beforeRun();
     const request = jsonp(await new RequestFactory().create());
-
+    const duration =
+      request.duration < 8 ? request.duration++ : request.duration--;
     tester
-      .put(urlPrefix)
+      .put(`${urlPrefix}/${request._id}`)
       .set('Accept', 'application/json')
-      .query({ id: request._id })
-      .send({
-        duration:
-          request.duration < 8 ? request.duration++ : request.duration--,
-      })
-      .expect('Content-Type', /json/)
-      .expect(204);
+      .send({ duration })
+      .end((err, res) => {
+        handleErr(err);
+        expect(201).toEqual(res.status);
+        expect(request._id.toString()).toEqual(res.body._id);
+        expect(duration).toEqual(res.body.duration);
+        done();
+      });
+  });
 
+  it('Update a non existent cleaning request', async done => {
     tester
-      .put(urlPrefix)
+      .put(`${urlPrefix}/5e975facfb775a004229a892`)
       .set('Accept', 'application/json')
-      .query({ id: 'not-exists' })
-      .send({
-        duration:
-          request.duration < 8 ? request.duration++ : request.duration--,
-      })
-      .expect('Content-Type', /json/)
-      .expect(404);
-    done();
+      .send({ duration: 8 })
+      .end((err, res) => {
+        handleErr(err);
+        expect(404).toEqual(res.status);
+        done();
+      });
   });
 });
 
 describe('DELETE /requests/{id}', () => {
   it('Delete a cleaning request', async done => {
-    await beforeRun();
     const request = jsonp(await new RequestFactory().create());
 
     tester
-      .del(urlPrefix)
+      .del(`${urlPrefix}/${request._id}`)
       .set('Accept', 'application/json')
       .query({ id: request._id })
-      .expect('Content-Type', /json/)
-      .expect(204);
+      .end((err, res) => {
+        handleErr(err);
+        expect(204).toEqual(res.status);
+        done();
+      });
+  });
 
+  it('Delete a non existent cleaning request', async done => {
     tester
-      .del(urlPrefix)
+      .put(`${urlPrefix}/5e975facfb775a004229a892`)
       .set('Accept', 'application/json')
-      .query({ id: 'no-exists' })
-      .expect('Content-Type', /json/)
-      .expect(404);
-    done();
+      .send({ duration: 8 })
+      .end((err, res) => {
+        handleErr(err);
+        expect(404).toEqual(res.status);
+        done();
+      });
   });
 });
 
@@ -197,7 +220,6 @@ describe('PATCH /requests', () => {
       .patch(urlPrefix)
       .set('Accept', 'application/json')
       .send(requests)
-      .expect('Content-Type', /json/)
       .expect(204);
 
     tester
@@ -209,21 +231,19 @@ describe('PATCH /requests', () => {
           empty: 'empoty',
         },
       ])
-      .expect('Content-Type', /json/)
       .expect(403);
     done();
   });
+});
 
-  describe('GET /requests/last-update', () => {
-    it('should show the last time a discount was created or updated', async done => {
-      const lastUpdate = jsonp(
-        await new RequestFactory().create(),
-      ).updatedAt.toISOString();
-      tester
-        .get(`${urlPrefix}/last-update`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200, { lastUpdate }, done);
-    });
+describe('GET /requests/last-update', () => {
+  it('should show the last time a discount was created or updated', async done => {
+    const lastUpdate = jsonp(
+      await new RequestFactory().create(),
+    ).updatedAt.toISOString();
+    tester
+      .get(`${urlPrefix}/last-update`)
+      .set('Accept', 'application/json')
+      .expect(200, { lastUpdate }, done);
   });
 });

@@ -129,7 +129,7 @@ module.exports = Router => {
    * @apiSuccessExample {empty} Success-Response:
    * No Content
    */
-  router.all('/', RequestController.patch);
+  router.patch('/', RequestController.patch);
 
   /**
    * @api {get} /requests/last-update Last Update Request Date

@@ -49,7 +49,7 @@ class CleaningTest extends TestCase
     {
         $requests = Cleaning::getRequests()->toArray();
         Cleaning::updateRequest($requests[0]['_id'], ['duration' => 8]);
-        $this->assertEquals(Response::HTTP_NO_CONTENT, Cleaning::getStatus());
+        $this->assertEquals(Response::HTTP_CREATED, Cleaning::getStatus());
     }
 
     public function testDeleteRequest()

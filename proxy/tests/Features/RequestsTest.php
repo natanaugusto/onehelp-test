@@ -26,15 +26,18 @@ class RequestsTests extends TestCase
             ['name', 'email']
         );
         unset($request['user_id']);
-        $this->post(route('requests.create'), $request)
+        $this->json('POST', route('requests.create'), $request)
         ->assertStatus(Response::HTTP_CREATED);
     }
 
     public function testUpdate()
     {
-        $request = factory(Request::class)->create();
+        $request = factory(Request::class)->create([
+            'reference' => '5e94779d2799fa0022ab9167'
+        ]);
 
-        $this->put(
+        $con = $this->json(
+            'PUT',
             route('requests.update', ['id' => $request->id]),
             ['duration' => 8]
         )
@@ -43,9 +46,11 @@ class RequestsTests extends TestCase
 
     public function testDelete()
     {
-        $request = factory(Request::class)->create();
+        $request = factory(Request::class)->create([
+            'reference' => '5e94779d2799fa0022ab9167',
+        ]);
 
-        $this->put(route('requests.delete', ['id' => $request->id]))
+        $this->json('DELETE', route('requests.delete', ['id' => $request->id]))
         ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 

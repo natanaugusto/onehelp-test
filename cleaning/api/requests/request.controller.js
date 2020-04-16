@@ -16,9 +16,9 @@ class RequestController {
     const { price, discountUsed } = await RequestService.getPrice(request);
     request.price = price;
     try {
-      await Request.create(request);
+      const reqCreated = await Request.create(request);
       await RequestService.consumeDiscounts(discountUsed);
-      ctx.body = request;
+      ctx.body = reqCreated;
       ctx.status = 201;
     } catch (err) {
       throw err;
@@ -42,13 +42,18 @@ class RequestController {
    * Update a cleaning request
    * @param {*} ctx
    */
-  async update(ctx) {
+  async update(ctx, next) {
     try {
-      await Request.updateOne(
+      const updated = await Request.updateOne(
         { _id: new ObjectId(ctx.params.id) },
         { $set: ctx.request.body },
       );
-      ctx.status = 204;
+      if (!updated.n) {
+        ctx.status = 404;
+        return next();
+      }
+      ctx.body = await Request.findById(new ObjectId(ctx.params.id));
+      ctx.status = 201;
     } catch (err) {
       throw err;
     }
