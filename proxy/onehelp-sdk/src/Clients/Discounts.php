@@ -27,9 +27,13 @@ class Discounts extends HttpClient {
         return $this->sendRequest('DELETE', "discounts/{$id}");
     }
 
-    public function getLastUpdate(): HttpResult
+    public function getLastUpdate(string $date = null): HttpResult
     {
-        return $this->sendRequest('GET', 'discounts/last-update');
+        $uri = 'discounts/last-update';
+        if ($date) {
+            $uri .= "?since={$date}";
+        }
+        return $this->sendRequest('GET', $uri);
     }
 
     protected function getHttpSettings(): array

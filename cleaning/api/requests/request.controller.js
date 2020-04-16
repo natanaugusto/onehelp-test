@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('moment');
 const ObjectId = require('mongoose').Types.ObjectId;
 const Request = require('./request.model');
 const RequestService = require('./discount.service');
@@ -91,12 +92,20 @@ class RequestController {
     }
   }
 
-  async lastUpdate(ctx) {
+  async lastUpdate(ctx, next) {
     try {
-      const lastUpdate = jsonp(
-        await Request.findOne().sort([['updatedAt', -1]]),
-      ).updatedAt;
-      ctx.body = { lastUpdate };
+      if (ctx.query.since) {
+        const since = moment(ctx.query.since);
+        const requests = await Request.find({
+          updatedAt: {
+            $gt: since,
+          },
+        });
+        ctx.body = requests;
+        return next();
+      }
+      const lastUpdate = await Request.findOne().sort([['updatedAt', -1]]);
+      ctx.body = { lastUpdate: lastUpdate.updatedAt };
     } catch (err) {
       throw err;
     }

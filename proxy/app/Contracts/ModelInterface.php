@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Contracts;
 
 interface ModelInterface {
     /**
@@ -9,4 +9,13 @@ interface ModelInterface {
      * @return bool
      */
     public function save(array $options = []);
+
+    /**
+     * Delete the model from the database.
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete();
 }

@@ -27,9 +27,13 @@ class Cleaning extends HttpClient {
         return $this->sendRequest('DELETE', "requests/{$id}");
     }
 
-    public function getRequestLastUpdate(): HttpResult
+    public function getRequestLastUpdate(string $date = null): HttpResult
     {
-        return $this->sendRequest('GET', 'requests/last-update');
+        $uri = 'requests/last-update';
+        if ($date) {
+            $uri .= "?since={$date}";
+        }
+        return $this->sendRequest('GET', $uri);
     }
 
     protected function getHttpSettings(): array

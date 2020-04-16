@@ -47,6 +47,15 @@ class DiscountController {
     }
 
     async lastUpdate(req: Request, res: Response) {
+        if (req.query.since) {
+            const since = new Date(req.query.since.toString());
+            const discounts = await DiscountDao.find({
+                updatedAt: {
+                    $gt: since
+                }
+            })
+            return res.status(OK).json(discounts)
+        }
         const lastUpdate = jsonp(await DiscountDao.findOne().sort([['updatedAt', -1]])).updatedAt
         res.status(OK).json({lastUpdate})
     }

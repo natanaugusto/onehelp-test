@@ -7,7 +7,7 @@ use Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
 
-class RequestsTests extends TestCase
+class RequestsTest extends TestCase
 {
     public function testList()
     {
@@ -36,7 +36,7 @@ class RequestsTests extends TestCase
             'reference' => '5e94f54fc3a0820023f06753'
         ]);
 
-        $con = $this->json(
+        $this->json(
             'PUT',
             route('requests.update', ['id' => $request->id]),
             ['duration' => 8]

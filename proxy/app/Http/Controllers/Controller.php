@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ModelInterface;
+use App\Contracts\ModelInterface;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -13,5 +13,4 @@ class Controller extends BaseController
             $model->{$property} = $value;
         }
     }
-
 }

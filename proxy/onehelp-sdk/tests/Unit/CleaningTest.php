@@ -64,5 +64,8 @@ class CleaningTest extends TestCase
         $lastUpdate = Cleaning::getRequestLastUpdate();
         $this->assertEquals(Response::HTTP_OK, Cleaning::getStatus());
         $this->assertArrayStructure(['lastUpdate'], $lastUpdate->toArray());
+
+        $lastUpdate = Cleaning::getRequestLastUpdate(date('Y-m-d'));
+        $this->assertTrue($lastUpdate->isCollection());
     }
 }

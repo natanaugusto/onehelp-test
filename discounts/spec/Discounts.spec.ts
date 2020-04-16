@@ -117,5 +117,18 @@ describe('Discounts Routes', () => {
                     done()
                 })
         })
+
+        it ('should show the lastest 3 discounts created or updated', async (done) => {
+            const discounts = jsonp(await new DiscountFactory(10).create())
+
+            agent.get(`${discountsPath}/last-update`)
+                .query({since: discounts[6].updatedAt})
+                .end((err: Error, res: Response) => {
+                    pErr(err)
+                    expect(res.status).toEqual(OK)
+                    expect(res.body.length).toEqual(3)
+                    done()
+                })
+        })
     })
 })

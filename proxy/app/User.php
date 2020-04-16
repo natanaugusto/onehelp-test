@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Contracts\ModelInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model implements ModelInterface

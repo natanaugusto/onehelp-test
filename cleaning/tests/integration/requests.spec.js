@@ -28,13 +28,13 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .end((err, res) => {
         handleErr(err);
-        expect(201).toEqual(res.status);
-        expect(cleaningRequest.user).toEqual(res.body.user);
-        expect(cleaningRequest.date).toEqual(
-          moment(res.body.data).format('YYYY-MM-DD'),
+        expect(res.status).toEqual(201);
+        expect(res.body.user).toEqual(cleaningRequest.user);
+        expect(moment(res.body.data).format('YYYY-MM-DD')).toEqual(
+          cleaningRequest.date,
         );
-        expect(cleaningRequest.duration).toEqual(res.body.duration);
-        expect(cleaningRequest.duration * pricePerHour).toEqual(res.body.price);
+        expect(res.body.duration).toEqual(cleaningRequest.duration);
+        expect(res.body.price).toEqual(cleaningRequest.duration * pricePerHour);
         done();
       });
   });
@@ -57,13 +57,13 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .end((err, res) => {
         handleErr(err);
-        expect(201).toEqual(res.status);
-        expect(cleaningRequest.user).toEqual(res.body.user);
-        expect(cleaningRequest.date).toEqual(
-          moment(res.body.data).format('YYYY-MM-DD'),
+        expect(res.status).toEqual(201);
+        expect(res.body.user).toEqual(cleaningRequest.user);
+        expect(moment(res.body.data).format('YYYY-MM-DD')).toEqual(
+          cleaningRequest.date,
         );
-        expect(cleaningRequest.duration).toEqual(res.body.duration);
-        expect(price).toEqual(res.body.price);
+        expect(res.body.duration).toEqual(cleaningRequest.duration);
+        expect(res.body.price).toEqual(price);
         done();
       });
   });
@@ -84,13 +84,13 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .end((err, res) => {
         handleErr(err);
-        expect(201).toEqual(res.status);
-        expect(cleaningRequest.user).toEqual(res.body.user);
-        expect(cleaningRequest.date).toEqual(
-          moment(res.body.data).format('YYYY-MM-DD'),
+        expect(res.status).toEqual(201);
+        expect(res.body.user).toEqual(cleaningRequest.user);
+        expect(moment(res.body.data).format('YYYY-MM-DD')).toEqual(
+          cleaningRequest.date,
         );
-        expect(cleaningRequest.duration).toEqual(res.body.duration);
-        expect(price).toEqual(res.body.price);
+        expect(res.body.duration).toEqual(cleaningRequest.duration);
+        expect(res.body.price).toEqual(price);
         done();
       });
   });
@@ -123,13 +123,13 @@ describe('POST /requests endpoint', () => {
       .set('Accept', 'application/json')
       .end((err, res) => {
         handleErr(err);
-        expect(201).toEqual(res.status);
-        expect(cleaningRequest.user).toEqual(res.body.user);
-        expect(cleaningRequest.date).toEqual(
-          moment(res.body.data).format('YYYY-MM-DD'),
+        expect(res.status).toEqual(201);
+        expect(res.body.user).toEqual(cleaningRequest.user);
+        expect(moment(res.body.data).format('YYYY-MM-DD')).toEqual(
+          cleaningRequest.date,
         );
-        expect(cleaningRequest.duration).toEqual(res.body.duration);
-        expect(price).toEqual(res.body.price);
+        expect(res.body.duration).toEqual(cleaningRequest.duration);
+        expect(res.body.price).toEqual(price);
         done();
       });
   });
@@ -159,9 +159,9 @@ describe('PUT /requests/{id}', () => {
       .send({ duration })
       .end((err, res) => {
         handleErr(err);
-        expect(201).toEqual(res.status);
-        expect(request._id.toString()).toEqual(res.body._id);
-        expect(duration).toEqual(res.body.duration);
+        expect(res.status).toEqual(201);
+        expect(res.body._id).toEqual(request._id.toString());
+        expect(res.body.duration).toEqual(duration);
         done();
       });
   });
@@ -173,7 +173,7 @@ describe('PUT /requests/{id}', () => {
       .send({ duration: 8 })
       .end((err, res) => {
         handleErr(err);
-        expect(404).toEqual(res.status);
+        expect(res.status).toEqual(404);
         done();
       });
   });
@@ -189,7 +189,7 @@ describe('DELETE /requests/{id}', () => {
       .query({ id: request._id })
       .end((err, res) => {
         handleErr(err);
-        expect(204).toEqual(res.status);
+        expect(res.status).toEqual(204);
         done();
       });
   });
@@ -201,7 +201,7 @@ describe('DELETE /requests/{id}', () => {
       .send({ duration: 8 })
       .end((err, res) => {
         handleErr(err);
-        expect(404).toEqual(res.status);
+        expect(res.status).toEqual(404);
         done();
       });
   });
@@ -237,13 +237,31 @@ describe('PATCH /requests', () => {
 });
 
 describe('GET /requests/last-update', () => {
-  it('should show the last time a discount was created or updated', async done => {
-    const lastUpdate = jsonp(
-      await new RequestFactory().create(),
-    ).updatedAt.toISOString();
+  it('should show the last time a request cleaning was created or updated', async done => {
+    const lastUpdate = jsonp(await new RequestFactory().create()).updatedAt;
+
     tester
       .get(`${urlPrefix}/last-update`)
       .set('Accept', 'application/json')
-      .expect(200, { lastUpdate }, done);
+      .end((err, res) => {
+        handleErr(err);
+        expect(res.status).toEqual(200);
+        expect(res.body.lastUpdate).toEqual(lastUpdate.toISOString());
+        done();
+      });
+  });
+
+  it('should show the lastest discounts was created or updated', async done => {
+    const requests = jsonp(await new RequestFactory(null, 10).create());
+    tester
+      .get(`${urlPrefix}/last-update`)
+      .query({ since: requests[6].updatedAt })
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        handleErr(err);
+        expect(res.status).toEqual(200);
+        expect(res.body.length).toEqual(3);
+        done();
+      });
   });
 });

@@ -42,7 +42,7 @@ class DiscountsTest extends TestCase
     {
         $discounts = Discounts::get()->toArray();
         Discounts::update($discounts[0]['_id'], ['value' => 1]);
-        $this->assertEquals(Response::HTTP_NO_CONTENT, Discounts::getStatus());
+        $this->assertEquals(Response::HTTP_CREATED, Discounts::getStatus());
     }
 
     public function testDelete()
@@ -57,5 +57,8 @@ class DiscountsTest extends TestCase
         $lastUpdate = Discounts::getLastUpdate();
         $this->assertEquals(Response::HTTP_OK, Discounts::getStatus());
         $this->assertArrayStructure(['lastUpdate'], $lastUpdate->toArray());
+
+        $lastUpdate = Discounts::getLastUpdate(date('Y-m-d'));
+        $this->assertTrue($lastUpdate->isCollection());
     }
 }
