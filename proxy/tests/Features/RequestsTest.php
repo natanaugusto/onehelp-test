@@ -33,7 +33,7 @@ class RequestsTests extends TestCase
     public function testUpdate()
     {
         $request = factory(Request::class)->create([
-            'reference' => '5e94779d2799fa0022ab9167'
+            'reference' => '5e94f54fc3a0820023f06753'
         ]);
 
         $con = $this->json(

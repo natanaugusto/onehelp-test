@@ -29,7 +29,9 @@ class DiscountsTest extends TestCase
 
     public function testUpdate()
     {
-        $discount = factory(Discount::class)->create();
+        $discount = factory(Discount::class)->create([
+            'reference' => '5e97b433fb775a004229a8a2'
+        ]);
 
         $this->json(
             'PUT',
@@ -41,7 +43,9 @@ class DiscountsTest extends TestCase
 
     public function testDelete()
     {
-        $discount = factory(Discount::class)->create();
+        $discount = factory(Discount::class)->create([
+            'reference' => '5e97b436fb775a004229a8a3'
+        ]);
 
         $this->json(
             'DELETE',

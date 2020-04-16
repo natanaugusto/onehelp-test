@@ -44,15 +44,16 @@ class RequestController {
    */
   async update(ctx, next) {
     try {
+      const id = new ObjectId(ctx.params.id);
       const updated = await Request.updateOne(
-        { _id: new ObjectId(ctx.params.id) },
+        { _id: id },
         { $set: ctx.request.body },
       );
       if (!updated.n) {
         ctx.status = 404;
         return next();
       }
-      ctx.body = await Request.findById(new ObjectId(ctx.params.id));
+      ctx.body = await Request.findById(id);
       ctx.status = 201;
     } catch (err) {
       throw err;

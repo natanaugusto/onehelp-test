@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 import {Response, SuperTest, Test} from 'supertest'
-import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from 'http-status-codes'
+import { BAD_REQUEST, CREATED, OK, NO_CONTENT, NOT_FOUND } from 'http-status-codes'
 
 import app from '@server'
 import jsonp from '@shared/jsonp'
@@ -26,7 +26,6 @@ describe('Discounts Routes', () => {
                     pErr(err)
                     expect(res.status).toBe(OK)
                     expect(res.body).toEqual(discounts)
-                    expect(res.body.error).toBeUndefined()
                     done()
                 })
         })
@@ -40,6 +39,7 @@ describe('Discounts Routes', () => {
                 .end((err: Error, res: Response) => {
                     pErr(err);
                     expect(res.status).toBe(CREATED)
+                    expect(res.body.userEmail).toBe(discount.userEmail)
                     done()
                 })
         })
@@ -48,11 +48,25 @@ describe('Discounts Routes', () => {
     describe(`PUT: ${discountsPath}`, () => {
         it('should update a discount', async (done) => {
             const discount = jsonp(await new DiscountFactory().create())
+            const value = 10
             agent.put(`${discountsPath}/${discount._id}`)
-                .send({value: 10})
+                .send({value})
                 .end((err: Error, res: Response) => {
                     pErr(err)
-                    expect(res.status).toEqual(NO_CONTENT)
+                    expect(res.status).toEqual(CREATED)
+                    expect(res.body._id).toEqual(discount._id.toString())
+                    expect(res.body.value).toEqual(value)
+                    done()
+                })
+        })
+
+        it('should update a non existent discount', async (done) => {
+            const value = 10
+            agent.put(`${discountsPath}/5e94779e2799fa0022ab9168`)
+                .send({value})
+                .end((err: Error, res: Response) => {
+                    pErr(err)
+                    expect(res.status).toEqual(NOT_FOUND)
                     done()
                 })
         })

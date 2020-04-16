@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
-import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from 'http-status-codes'
+import { BAD_REQUEST, CREATED, OK, NO_CONTENT, NOT_FOUND } from 'http-status-codes'
 import jsonp from '@shared/jsonp'
 import DiscountDao from '@daos/Discount/DiscountDao'
 
@@ -8,9 +8,8 @@ const ObjectId = mongoose.Types.ObjectId
 
 class DiscountController {
     async create(req: Request, res: Response) {
-        const discount = req.body
-        await DiscountDao.create(discount)
-        return res.status(CREATED).end()
+        const discount = await DiscountDao.create(req.body)
+        return res.status(CREATED).json(discount)
     }
 
     async list(req: Request, res: Response) {
@@ -19,11 +18,15 @@ class DiscountController {
     }
 
     async update(req: Request, res: Response) {
-        await DiscountDao.updateOne(
-            {_id: new ObjectId(req.params.id)},
+        const id = new ObjectId(req.params.id);
+        const update = await DiscountDao.updateOne(
+            {_id: id},
             { $set: req.body }
         )
-        return res.status(NO_CONTENT).end()
+        if (!update.n) {
+            return res.status(NOT_FOUND).end()
+        }
+        return res.status(CREATED).json(await DiscountDao.findById(id))
     }
 
     async delete(req: Request, res: Response) {

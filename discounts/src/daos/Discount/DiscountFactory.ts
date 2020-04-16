@@ -12,7 +12,7 @@ class DiscountFactory extends Factory {
         return {
             type: faker.random.arrayElement(['absolute', 'percent']),
             value: faker.random.number(10),
-            userEmail: faker.internet.email(),
+            userEmail: faker.internet.email().toLowerCase(),
         }
     }
 }

@@ -43,11 +43,11 @@ abstract class Facotry {
      */
     make() {
         let result
-        if (this.count) {
+        if (this.count > 1) {
             result = []
             for (let i = 0; i < this.count; i++) {
-            let entity = this.mergeSchema(this.schema())
-            result.push(entity)
+                let entity = this.mergeSchema(this.schema())
+                result.push(entity)
             }
         } else {
             result = this.mergeSchema(this.schema())
@@ -61,7 +61,7 @@ abstract class Facotry {
      * @param {object} schema
      * @returns {object}
      */
-    mergeSchema(schema: Object): Object {
+    mergeSchema(schema: Object): any {
         if (this.defaultValues) {
             schema = Object.assign(schema, this.defaultValues)
         }
