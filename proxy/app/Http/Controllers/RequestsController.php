@@ -6,7 +6,6 @@ use Exception;
 
 use App\Request;
 use App\Services\RequestService;
-
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -28,6 +27,20 @@ class RequestsController extends Controller
             $data = $http->all();
             $this->service->sync(null, $data);
             return response()->json(null, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getPrice(HttpRequest $http): JsonResponse
+    {
+        try {
+            return response()->json(
+                ['price' => $this->service->getPriceFor(
+                    $http->all()
+                )],
+                Response::HTTP_OK
+            );
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

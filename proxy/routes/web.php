@@ -301,4 +301,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
             ]);
         }
     );
+    $router->get('/price', [
+        'as' => 'requests.price',
+        'uses' => 'RequestsController@getPrice',
+    ]);
 });

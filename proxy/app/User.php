@@ -24,4 +24,14 @@ class User extends Model implements ModelInterface
     protected $hidden = [
         'password',
     ];
+
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class);
+    }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
 }

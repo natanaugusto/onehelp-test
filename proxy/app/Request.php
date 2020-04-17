@@ -20,6 +20,14 @@ class Request extends Model implements ModelInterface
         'price',
     ];
 
+    protected $casts = [
+        'reference' => 'string',
+        'user_id' => 'integer',
+        'date' => 'date',
+        'duration' => 'integer',
+        'price' => 'decimal:2',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

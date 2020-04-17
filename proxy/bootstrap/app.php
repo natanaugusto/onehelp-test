@@ -102,4 +102,5 @@ $app->router->group([
 });
 $app->configure('database');
 $app->configure('queue');
+$app->configure('onehelp');
 return $app;

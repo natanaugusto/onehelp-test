@@ -3,6 +3,7 @@ namespace Tests\Features;
 
 use App\User;
 use App\Request;
+use App\Discount;
 use Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
@@ -54,6 +55,38 @@ class RequestsTest extends TestCase
         ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
+    public function testGetPrice()
+    {
+        $request = factory(Request::class)->raw();
+        $user = User::find($request['user_id'])->toArray();
+        $request['user'] = Arr::only(
+            $user,
+            ['name', 'email']
+        );
+        unset($request['price']);
+        unset($request['user_id']);
+        $this->json('GET', route('requests.price'), $request)
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJson(
+            ['price' => $request['duration'] * config('onehelp.defaultRequestPrice')]
+        );
+
+        $discount = factory(Discount::class)->create([
+            'user_id' => $user['id'],
+            'type' => 'percent',
+            'value' => 0.25,
+        ]);
+        $price = $request['duration']
+            * config('onehelp.defaultRequestPrice');
+
+        $this->json('GET', route('requests.price'), $request)
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJson(
+            [
+                'price' => $price - $price * $discount->value,
+            ]
+        );
+    }
     public function testPatch()
     {
         $requests = factory(Request::class, 10)->create();

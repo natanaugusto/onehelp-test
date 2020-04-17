@@ -40,4 +40,25 @@ class RequestService extends SyncableService
         $request->save();
         return $request;
     }
+
+    public function getPriceFor(array $request): float
+    {
+        $originalPrice = $request['duration'] * config('onehelp.defaultRequestPrice');
+        $price = $originalPrice;
+        $user = User::where(
+            ['email' => $request['user']['email']]
+        )->first();
+        if ($user) {
+            $discounts = $user->discounts;
+            foreach($discounts as $discount) {
+                $newPrice = $discount->type
+                    ? $originalPrice - $originalPrice * (float)$discount->value
+                    : $originalPrice - (float)$discount->value;
+                if ($newPrice < $price) {
+                    $price = $newPrice;
+                }
+            }
+        }
+        return $price;
+    }
 }
