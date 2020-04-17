@@ -45,14 +45,11 @@ class SyncDiscounts extends Command
     {
         $date = $this->argument('date');
         if (!$date) {
-            $lastUpdated = Discount::select('updated_at')->latest();
-            if (!$lastUpdated) {
-                return;
-            }
-            $date = $lastUpdated->updated_at;
+            $lastUpdated = Discount::select('updated_at')->latest()->first();
+            $date = $lastUpdated->count() ? $lastUpdated->updated_at : 'all';
         }
         $latests = $date === 'all'
-            ? Discounts::get()
+            ? Discounts::get()->toArray()
             : Discounts::getLastUpdate($date)->toArray();
         $requestService = new DiscountService();
         foreach($latests as $request) {

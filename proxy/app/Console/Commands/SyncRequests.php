@@ -45,14 +45,11 @@ class SyncRequests extends Command
     {
         $date = $this->argument('date');
         if (!$date) {
-            $lastUpdated = Request::select('updated_at')->latest();
-            if (!$lastUpdated) {
-                return;
-            }
-            $date = $lastUpdated->updated_at;
+            $lastUpdated = Request::select('updated_at')->latest()->first();
+            $date = $lastUpdated->count() ? $lastUpdated->updated_at : 'all';
         }
         $latests = $date === 'all'
-            ? Cleaning::getRequests()
+            ? Cleaning::getRequests()->toArray()
             : Cleaning::getRequestLastUpdate($date)->toArray();
         $requestService = new RequestService();
         foreach($latests as $request) {

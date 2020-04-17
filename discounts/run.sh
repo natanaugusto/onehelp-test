@@ -15,7 +15,7 @@ chown -R www-data:www-data /opt/app
 if [[ $YARN = true ]]; then
     su -c "cd $PROJECT_PATH; yarn" -s /bin/bash www-data
 else
-    su -c "cd $PROJECT_PATH; npm i --force" -s /bin/bash www-data
+    su -c "cd $PROJECT_PATH; npm i --force; npm run build" -s /bin/bash www-data
 fi
 
 su -c "cd $PROJECT_PATH; npm run build" -s /bin/bash www-data
