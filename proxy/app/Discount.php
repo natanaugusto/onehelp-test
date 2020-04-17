@@ -18,4 +18,9 @@ class Discount extends Model implements ModelInterface
         'type',
         'value',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

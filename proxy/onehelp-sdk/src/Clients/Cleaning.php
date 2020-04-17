@@ -5,7 +5,7 @@ use OneHelpSDK\Clients\Utils\HttpClient;
 use OneHelpSDK\Clients\Utils\HttpResult;
 
 class Cleaning extends HttpClient {
-    const BASE_URI = 'http://cleaning.onehelp.natanaugusto.com/v1/';
+    const BASE_URI = 'http://cleaning:3001/v1/';
 
     public function getRequests(): HttpResult
     {

@@ -21,7 +21,7 @@ class DiscountsController extends Controller
 
     public function list(): JsonResponse
     {
-        return response()->json(Discount::all());
+        return response()->json(Discount::with('user')->get());
     }
 
     public function create(Request $request): JsonResponse

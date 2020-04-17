@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9da767a86833d5eea4f23bd41834213",
+    "content-hash": "55a1ff3973b752b1bb11c751b54a02a0",
     "packages": [
         {
             "name": "brick/math",
@@ -1358,6 +1358,54 @@
             "description": "The Illuminate Queue package.",
             "homepage": "https://laravel.com",
             "time": "2020-03-12T11:32:25+00:00"
+        },
+        {
+            "name": "illuminate/redis",
+            "version": "v6.18.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/redis.git",
+                "reference": "4deefd1ed7e66fcbef11432cf6aa3325c5fa1e22"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/redis/zipball/4deefd1ed7e66fcbef11432cf6aa3325c5fa1e22",
+                "reference": "4deefd1ed7e66fcbef11432cf6aa3325c5fa1e22",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^6.0",
+                "illuminate/support": "^6.0",
+                "php": "^7.2"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the phpredis connector (^4.0|^5.0).",
+                "predis/predis": "Required to use the predis connector (^1.0)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Redis\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Redis package.",
+            "homepage": "https://laravel.com",
+            "time": "2020-04-13T14:24:27+00:00"
         },
         {
             "name": "illuminate/session",
@@ -5571,5 +5619,6 @@
     "platform": {
         "php": "^7.2"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

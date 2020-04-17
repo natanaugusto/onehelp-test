@@ -17,7 +17,7 @@ class DiscountService extends SyncableService
 
     protected function syncModel(HttpResult $result): ModelInterface
     {
-        $discount = Discount::first(['reference' => $result->_id]);
+        $discount = Discount::where(['reference' => $result->_id])->first();
         if(!$discount) {
             $discount = new Discount();
         }

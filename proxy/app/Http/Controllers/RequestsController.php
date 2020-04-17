@@ -19,7 +19,7 @@ class RequestsController extends Controller
 
     public function list(): JsonResponse
     {
-        return response()->json(Request::all());
+        return response()->json(Request::with('user')->get());
     }
 
     public function create(HttpRequest $http): JsonResponse

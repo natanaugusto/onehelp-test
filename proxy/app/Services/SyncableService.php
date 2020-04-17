@@ -2,9 +2,10 @@
 namespace App\Services;
 
 use App\Contracts\ModelInterface;
+use App\Contracts\SyncableInterface;
 use OneHelpSDK\Clients\Utils\HttpResult;
 
-abstract class SyncableService
+abstract class SyncableService implements SyncableInterface
 {
     protected $sdkClient;
     protected $sdkCreateMethod;

@@ -5,7 +5,7 @@ use OneHelpSDK\Clients\Utils\HttpClient;
 use OneHelpSDK\Clients\Utils\HttpResult;
 
 class Discounts extends HttpClient {
-    const BASE_URI = 'http://discounts.onehelp.natanaugusto.com/v1/';
+    const BASE_URI = 'http://discounts:3002/v1/';
 
     public function get(): HttpResult
     {

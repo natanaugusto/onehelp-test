@@ -30,7 +30,7 @@ class DiscountsTest extends TestCase
     public function testUpdate()
     {
         $discount = factory(Discount::class)->create([
-            'reference' => '5e97b433fb775a004229a8a2'
+            'reference' => '5e97b8acfb775a004229a8ad'
         ]);
 
         $this->json(

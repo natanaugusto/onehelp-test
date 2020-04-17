@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\SyncRequests::class,
+        Commands\SyncDiscounts::class,
     ];
 
     /**
@@ -24,6 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        $schedule->command('sync:requests')->everyMinute();
+        $schedule->command('sync:discounts')->everyMinute();
     }
 }

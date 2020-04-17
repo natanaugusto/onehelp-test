@@ -33,7 +33,7 @@ class RequestsTest extends TestCase
     public function testUpdate()
     {
         $request = factory(Request::class)->create([
-            'reference' => '5e94f54fc3a0820023f06753'
+            'reference' => '5e97709cb667c500213b0dcc'
         ]);
 
         $this->json(
@@ -47,7 +47,7 @@ class RequestsTest extends TestCase
     public function testDelete()
     {
         $request = factory(Request::class)->create([
-            'reference' => '5e94779d2799fa0022ab9167',
+            'reference' => '5e97700cb667c500213b0dcb',
         ]);
 
         $this->json('DELETE', route('requests.delete', ['id' => $request->id]))
